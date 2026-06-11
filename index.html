@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>World Cup Challenge</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="top-band">
+      <div class="top-band__inner">
+        <div class="brand">
+          <p class="eyebrow">2026 friends pool</p>
+          <h1>World Cup Challenge</h1>
+          <p class="brand__subcopy">Six players. Eight teams each. Two random teams from every pot. Scores update from live match data.</p>
+        </div>
+        <div class="sync-status" aria-live="polite">
+          <span class="sync-status__label">Live scoring</span>
+          <strong id="sync-state">Loading</strong>
+          <span id="sync-detail">Connecting to match feed...</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="nav-band" aria-label="Main views">
+      <div class="nav-band__inner">
+        <button class="nav-button is-active" type="button" data-view="scoreboard">Scoreboard</button>
+        <button class="nav-button" type="button" data-view="teams">Teams</button>
+        <button class="nav-button" type="button" data-view="matches">Matches</button>
+        <button class="nav-button" type="button" data-view="rules">Rules</button>
+        <button class="nav-button nav-button--admin" type="button" id="admin-toggle">Commissioner</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="notice-band is-hidden" id="draft-notice">
+        <div class="notice-band__inner">
+          <strong>No teams assigned yet.</strong>
+          <span>Open Commissioner, enter the six names, then randomize two teams per pot for each player.</span>
+        </div>
+      </section>
+
+      <section class="view is-active" id="scoreboard-view" aria-labelledby="scoreboard-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Current standings</p>
+            <h2 id="scoreboard-title">Scoreboard</h2>
+          </div>
+          <button class="secondary-button" type="button" id="refresh-button">Refresh scores</button>
+        </div>
+        <div class="leaderboard" id="leaderboard"></div>
+        <div class="summary-grid" id="score-summary"></div>
+      </section>
+
+      <section class="view" id="teams-view" aria-labelledby="teams-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">All 48 teams</p>
+            <h2 id="teams-title">Team Board</h2>
+          </div>
+          <div class="filters" id="team-filters"></div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Pot</th>
+                <th>Group</th>
+                <th>Owner</th>
+                <th>Record</th>
+                <th>Goals</th>
+                <th>Stage</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody id="team-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="view" id="matches-view" aria-labelledby="matches-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ESPN match feed</p>
+            <h2 id="matches-title">Matches</h2>
+          </div>
+          <button class="secondary-button" type="button" id="refresh-live-button">Refresh feed</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Stage</th>
+                <th>Match</th>
+                <th>Status</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="match-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="view" id="rules-view" aria-labelledby="rules-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Pool setup</p>
+            <h2 id="rules-title">Rules</h2>
+          </div>
+        </div>
+        <div class="rules-grid" id="rules-grid"></div>
+      </section>
+
+      <section class="view" id="admin-view" aria-labelledby="admin-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Local editing</p>
+            <h2 id="admin-title">Commissioner</h2>
+          </div>
+          <div class="button-row">
+            <button class="secondary-button" type="button" id="copy-json-button">Copy setup JSON</button>
+            <button class="primary-button" type="button" id="download-json-button">Download setup file</button>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <section class="admin-panel" aria-labelledby="players-title">
+            <h3 id="players-title">Players</h3>
+            <div id="player-editor" class="stack"></div>
+            <div class="button-row">
+              <button class="primary-button" type="button" id="randomize-button">Randomize teams</button>
+              <button class="secondary-button" type="button" id="clear-assignments-button">Clear assignments</button>
+            </div>
+          </section>
+
+          <section class="admin-panel" aria-labelledby="publish-title">
+            <h3 id="publish-title">Publish Updates</h3>
+            <ol class="publish-list">
+              <li>Set names and randomize teams once.</li>
+              <li>Download or copy the setup file.</li>
+              <li>Replace <code>data/challenge-state.json</code> in GitHub and commit it.</li>
+              <li>The shared page pulls match results automatically.</li>
+            </ol>
+            <label class="file-picker">
+              <span>Import setup file</span>
+              <input type="file" id="import-json-input" accept="application/json" />
+            </label>
+            <button class="secondary-button" type="button" id="load-published-button">Load published file</button>
+          </section>
+        </div>
+
+        <section class="admin-panel admin-panel--wide" aria-labelledby="assignment-editor-title">
+          <div class="section-heading section-heading--compact">
+            <div>
+              <p class="eyebrow">Setup only</p>
+              <h3 id="assignment-editor-title">Team Assignments</h3>
+            </div>
+            <div class="filters" id="admin-filters"></div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table data-table--editor">
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Owner</th>
+                  <th>Awards</th>
+                  <th>Auto record</th>
+                  <th>Auto stage</th>
+                  <th>Live pts</th>
+                </tr>
+              </thead>
+              <tbody id="admin-team-table-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer-band">
+      <span id="footer-updated">Ready</span>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
