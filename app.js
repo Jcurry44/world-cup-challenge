@@ -295,11 +295,18 @@ function renderLeaderboard() {
           const chips = entry.teams
             .filter((team) => team.pot === pot)
             .sort(sortTeamsByScore)
-            .map((team) => `<button class="team-chip team-chip--button" type="button" data-pot="${team.pot}" data-team-id="${team.id}">${escapeHtml(team.name)} ${teamScore(team)}</button>`)
+            .map(
+              (team) => `
+                <button class="team-chip team-chip--button" type="button" data-pot="${team.pot}" data-team-id="${team.id}">
+                  <span>${escapeHtml(team.name)}</span>
+                  <strong>${teamScore(team)}</strong>
+                </button>
+              `
+            )
             .join("");
           return `
             <div class="pot-row">
-              <span class="pot-label">Pot ${pot}</span>
+              <span class="pot-label">P${pot}</span>
               <div class="team-chip-wrap">${chips || `<span class="team-chip" data-pot="${pot}">Unassigned</span>`}</div>
             </div>
           `;
@@ -307,11 +314,12 @@ function renderLeaderboard() {
         .join("");
 
       return `
-        <article class="player-card">
+        <article class="player-card" data-rank="${index + 1}">
           <div class="player-card__top">
+            <span class="rank-badge">${index + 1}</span>
             <div>
-              <span class="player-card__rank">Rank ${index + 1}</span>
               <h3>${escapeHtml(entry.player.name)}</h3>
+              <p>${entry.teams.length} teams assigned</p>
             </div>
             <div class="score-badge">
               <strong>${entry.score}</strong>
@@ -341,11 +349,6 @@ function renderSummary() {
       note: leader ? `${leader.score} points from ${leader.teams.length} teams` : "Assign teams to start"
     },
     {
-      label: "Top team",
-      value: topTeam ? topTeam.name : "None",
-      note: topTeam ? `${teamScore(topTeam)} points, owned by ${ownerName(topTeam.ownerId)}` : "No scores yet"
-    },
-    {
       label: "Live now",
       value: currentMatches.length || "None",
       note: currentMatches[0] ? currentMatches[0].shortName : nextMatch ? `Next: ${nextMatch.shortName}` : "Waiting for schedule"
@@ -359,6 +362,11 @@ function renderSummary() {
       label: "Assigned teams",
       value: `${assignedCount}/48`,
       note: "Two teams per pot per player"
+    },
+    {
+      label: "Top team",
+      value: topTeam ? topTeam.name : "None",
+      note: topTeam ? `${teamScore(topTeam)} points, owned by ${ownerName(topTeam.ownerId)}` : "No scores yet"
     },
     {
       label: "Scoring source",

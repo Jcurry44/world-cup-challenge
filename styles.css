@@ -225,8 +225,8 @@ main {
 
 .leaderboard {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .player-card,
@@ -236,39 +236,58 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 34px rgba(25, 40, 37, 0.08);
 }
 
 .player-card {
-  min-height: 260px;
   display: grid;
   grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.player-card[data-rank="1"] {
+  border-color: rgba(214, 154, 34, 0.7);
+  background: linear-gradient(180deg, #fffdf7 0%, #ffffff 46%);
 }
 
 .player-card__top {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
   border-bottom: 1px solid var(--line);
 }
 
-.player-card__rank {
-  color: var(--muted);
-  font-size: 0.82rem;
+.rank-badge {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #ffffff;
+  font-size: 0.95rem;
   font-weight: 800;
 }
 
 .player-card h3 {
-  margin: 4px 0 0;
-  font-size: 1.25rem;
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.player-card__top p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .score-badge {
-  min-width: 74px;
+  min-width: 66px;
   align-self: start;
   border-radius: var(--radius);
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: var(--ink);
   color: #ffffff;
   text-align: center;
@@ -276,7 +295,7 @@ main {
 
 .score-badge strong {
   display: block;
-  font-size: 1.55rem;
+  font-size: 1.35rem;
   line-height: 1;
 }
 
@@ -287,14 +306,14 @@ main {
 
 .player-card__teams {
   display: grid;
-  gap: 10px;
-  padding: 18px;
+  gap: 8px;
+  padding: 12px 14px 14px;
 }
 
 .pot-row {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
   align-items: start;
 }
 
@@ -305,7 +324,7 @@ main {
   align-items: center;
   min-height: 28px;
   border-radius: 999px;
-  padding: 4px 9px;
+  padding: 4px 8px;
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -319,13 +338,28 @@ main {
 .team-chip-wrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .team-chip {
+  gap: 6px;
+  justify-content: space-between;
   border: 1px solid var(--line);
   background: #ffffff;
   color: var(--ink);
+  max-width: 100%;
+}
+
+.team-chip span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.team-chip strong {
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0.78;
 }
 
 .team-chip--button,
@@ -363,14 +397,14 @@ main {
 .admin-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 18px;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .metric-card,
 .rule-card,
 .admin-panel {
-  padding: 18px;
+  padding: 14px;
 }
 
 .metric-card p,
@@ -382,7 +416,7 @@ main {
 
 .metric-card strong {
   display: block;
-  font-size: 2rem;
+  font-size: 1.55rem;
   line-height: 1;
 }
 
@@ -731,12 +765,15 @@ main {
   }
 
   .leaderboard,
-  .summary-grid,
   .rules-grid,
   .admin-grid,
   .detail-grid,
   .sync-form {
     grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .section-heading {
@@ -764,12 +801,50 @@ main {
   }
 
   .player-card__top {
-    align-items: start;
-    flex-direction: column;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 12px;
   }
 
   .score-badge {
-    width: 100%;
+    min-width: 58px;
+    width: auto;
+    padding: 7px 8px;
+  }
+
+  .score-badge strong {
+    font-size: 1.15rem;
+  }
+
+  .score-badge span {
+    font-size: 0.68rem;
+  }
+
+  .rank-badge {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .player-card h3 {
+    font-size: 1rem;
+  }
+
+  .player-card__top p {
+    font-size: 0.72rem;
+  }
+
+  .player-card__teams {
+    padding: 10px 12px 12px;
+  }
+
+  .team-chip {
+    min-height: 26px;
+    font-size: 0.74rem;
+  }
+
+  .metric-card {
+    min-height: 96px;
   }
 
   .notice-band__inner {
