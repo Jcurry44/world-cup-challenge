@@ -60,6 +60,7 @@
           </div>
           <div class="filters" id="team-filters"></div>
         </div>
+        <aside class="team-detail" id="team-detail" aria-live="polite"></aside>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -85,7 +86,10 @@
             <p class="eyebrow">ESPN match feed</p>
             <h2 id="matches-title">Matches</h2>
           </div>
-          <button class="secondary-button" type="button" id="refresh-live-button">Refresh feed</button>
+          <div class="button-row">
+            <div class="filters" id="match-filters"></div>
+            <button class="secondary-button" type="button" id="refresh-live-button">Refresh feed</button>
+          </div>
         </div>
         <div class="table-wrap">
           <table class="data-table">
@@ -136,13 +140,42 @@
           </section>
 
           <section class="admin-panel" aria-labelledby="publish-title">
-            <h3 id="publish-title">Publish Updates</h3>
+            <h3 id="publish-title">GitHub Sync</h3>
             <ol class="publish-list">
-              <li>Set names and randomize teams once.</li>
-              <li>Download or copy the setup file.</li>
-              <li>Replace <code>data/challenge-state.json</code> in GitHub and commit it.</li>
-              <li>The shared page pulls match results automatically.</li>
+              <li>Use a fine-grained GitHub token with contents access for this repo only.</li>
+              <li>Setup changes push <code>data/challenge-state.json</code>.</li>
+              <li>Match scores still come from ESPN automatically.</li>
             </ol>
+            <div class="sync-form" id="github-sync-form">
+              <label class="field">
+                <span>Owner</span>
+                <input id="github-owner" type="text" autocomplete="off" />
+              </label>
+              <label class="field">
+                <span>Repo</span>
+                <input id="github-repo" type="text" autocomplete="off" />
+              </label>
+              <label class="field">
+                <span>Branch</span>
+                <input id="github-branch" type="text" autocomplete="off" />
+              </label>
+              <label class="field field--wide">
+                <span>Token</span>
+                <input id="github-token" type="password" autocomplete="off" />
+              </label>
+              <label class="check-field">
+                <input id="github-remember" type="checkbox" />
+                <span>Remember token on this device</span>
+              </label>
+              <label class="check-field">
+                <input id="github-auto-push" type="checkbox" />
+                <span>Auto-push setup changes</span>
+              </label>
+            </div>
+            <div class="button-row button-row--left">
+              <button class="primary-button" type="button" id="github-push-button">Push setup to GitHub</button>
+              <span class="inline-status" id="github-sync-status">Not connected</span>
+            </div>
             <label class="file-picker">
               <span>Import setup file</span>
               <input type="file" id="import-json-input" accept="application/json" />

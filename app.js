@@ -36,15 +36,70 @@ const TEAM_ALIASES = new Map(
   }).map(([name, id]) => [normalizeName(name), id])
 );
 
+const TEAM_INFO = {
+  mex: { confederation: "CONCACAF", rankNov: 15, rankJune: 14, qualification: "Co-host", qualified: "February 14, 2023", appearance: "18th", last: "2022", best: "Quarter-finals (1970, 1986)" },
+  rsa: { confederation: "CAF", rankNov: 61, rankJune: 60, qualification: "CAF Group C winner", qualified: "October 14, 2025", appearance: "4th", last: "2010", best: "Group stage" },
+  kor: { confederation: "AFC", rankNov: 22, rankJune: 25, qualification: "AFC third round Group B winner", qualified: "June 5, 2025", appearance: "12th", last: "2022", best: "Fourth place (2002)" },
+  cze: { confederation: "UEFA", rankNov: 44, rankJune: 40, qualification: "UEFA second round Path D winner", qualified: "March 31, 2026", appearance: "10th", last: "2006", best: "Runner-up (1934, 1962)" },
+  can: { confederation: "CONCACAF", rankNov: 27, rankJune: 30, qualification: "Co-host", qualified: "February 14, 2023", appearance: "3rd", last: "2022", best: "Group stage" },
+  bih: { confederation: "UEFA", rankNov: 71, rankJune: 64, qualification: "UEFA second round Path A winner", qualified: "March 31, 2026", appearance: "2nd", last: "2014", best: "Group stage" },
+  qat: { confederation: "AFC", rankNov: 51, rankJune: 56, qualification: "AFC fourth round Group A winner", qualified: "October 14, 2025", appearance: "2nd", last: "2022", best: "Group stage" },
+  sui: { confederation: "UEFA", rankNov: 17, rankJune: 19, qualification: "UEFA Group B winner", qualified: "November 18, 2025", appearance: "13th", last: "2022", best: "Quarterfinals (1934, 1938, 1954)" },
+  bra: { confederation: "CONMEBOL", rankNov: 5, rankJune: 6, qualification: "CONMEBOL round robin fifth place", qualified: "June 10, 2025", appearance: "23rd", last: "2022", best: "Winner (1958, 1962, 1970, 1994, 2002)" },
+  mar: { confederation: "CAF", rankNov: 11, rankJune: 7, qualification: "CAF Group E winner", qualified: "September 5, 2025", appearance: "7th", last: "2022", best: "Fourth place (2022)" },
+  hai: { confederation: "CONCACAF", rankNov: 84, rankJune: 83, qualification: "CONCACAF Group C winner", qualified: "November 18, 2025", appearance: "2nd", last: "1974", best: "Group stage" },
+  sco: { confederation: "UEFA", rankNov: 36, rankJune: 42, qualification: "UEFA Group C winner", qualified: "November 18, 2025", appearance: "9th", last: "1998", best: "Group stage" },
+  usa: { confederation: "CONCACAF", rankNov: 14, rankJune: 17, qualification: "Co-host", qualified: "February 14, 2023", appearance: "12th", last: "2022", best: "Third place (1930)" },
+  par: { confederation: "CONMEBOL", rankNov: 39, rankJune: 41, qualification: "CONMEBOL round robin sixth place", qualified: "September 4, 2025", appearance: "9th", last: "2010", best: "Quarterfinals (2010)" },
+  aus: { confederation: "AFC", rankNov: 26, rankJune: 27, qualification: "AFC third round Group C runner-up", qualified: "June 10, 2025", appearance: "7th", last: "2022", best: "Round of 16 (2006, 2022)" },
+  tur: { confederation: "UEFA", rankNov: 25, rankJune: 22, qualification: "UEFA second round Path C winner", qualified: "March 31, 2026", appearance: "3rd", last: "2002", best: "Third place (2002)" },
+  ger: { confederation: "UEFA", rankNov: 9, rankJune: 10, qualification: "UEFA Group A winner", qualified: "November 17, 2025", appearance: "21st", last: "2022", best: "Winner (1954, 1974, 1990, 2014)" },
+  cuw: { confederation: "CONCACAF", rankNov: 82, rankJune: 82, qualification: "CONCACAF Group B winner", qualified: "November 18, 2025", appearance: "1st", last: "Debut", best: "Debut" },
+  civ: { confederation: "CAF", rankNov: 42, rankJune: 33, qualification: "CAF Group F winner", qualified: "October 14, 2025", appearance: "4th", last: "2014", best: "Group stage" },
+  ecu: { confederation: "CONMEBOL", rankNov: 23, rankJune: 23, qualification: "CONMEBOL round robin runner-up", qualified: "June 10, 2025", appearance: "5th", last: "2022", best: "Round of 16 (2006)" },
+  ned: { confederation: "UEFA", rankNov: 7, rankJune: 8, qualification: "UEFA Group G winner", qualified: "November 17, 2025", appearance: "12th", last: "2022", best: "Runner-up (1974, 1978, 2010)" },
+  jpn: { confederation: "AFC", rankNov: 18, rankJune: 18, qualification: "AFC third round Group C winner", qualified: "March 20, 2025", appearance: "8th", last: "2022", best: "Round of 16" },
+  swe: { confederation: "UEFA", rankNov: 43, rankJune: 38, qualification: "UEFA second round Path B winner", qualified: "March 31, 2026", appearance: "13th", last: "2018", best: "Runner-up (1958)" },
+  tun: { confederation: "CAF", rankNov: 40, rankJune: 45, qualification: "CAF Group H winner", qualified: "September 8, 2025", appearance: "7th", last: "2022", best: "Group stage" },
+  bel: { confederation: "UEFA", rankNov: 8, rankJune: 9, qualification: "UEFA Group J winner", qualified: "November 18, 2025", appearance: "15th", last: "2022", best: "Third place (2018)" },
+  egy: { confederation: "CAF", rankNov: 34, rankJune: 29, qualification: "CAF Group A winner", qualified: "October 8, 2025", appearance: "4th", last: "2018", best: "First round / group stage" },
+  irn: { confederation: "AFC", rankNov: 20, rankJune: 20, qualification: "AFC third round Group A winner", qualified: "March 25, 2025", appearance: "7th", last: "2022", best: "Group stage" },
+  nzl: { confederation: "OFC", rankNov: 86, rankJune: 85, qualification: "OFC third round winner", qualified: "March 24, 2025", appearance: "3rd", last: "2010", best: "Group stage" },
+  esp: { confederation: "UEFA", rankNov: 1, rankJune: 2, qualification: "UEFA Group E winner", qualified: "November 18, 2025", appearance: "17th", last: "2022", best: "Winner (2010)" },
+  cpv: { confederation: "CAF", rankNov: 68, rankJune: 67, qualification: "CAF Group D winner", qualified: "October 13, 2025", appearance: "1st", last: "Debut", best: "Debut" },
+  ksa: { confederation: "AFC", rankNov: 60, rankJune: 61, qualification: "AFC fourth round Group B winner", qualified: "October 14, 2025", appearance: "7th", last: "2022", best: "Round of 16 (1994)" },
+  uru: { confederation: "CONMEBOL", rankNov: 16, rankJune: 16, qualification: "CONMEBOL round robin fourth place", qualified: "September 4, 2025", appearance: "15th", last: "2022", best: "Winner (1930, 1950)" },
+  fra: { confederation: "UEFA", rankNov: 3, rankJune: 3, qualification: "UEFA Group D winner", qualified: "November 13, 2025", appearance: "17th", last: "2022", best: "Winner (1998, 2018)" },
+  sen: { confederation: "CAF", rankNov: 19, rankJune: 15, qualification: "CAF Group B winner", qualified: "October 14, 2025", appearance: "4th", last: "2022", best: "Quarterfinals (2002)" },
+  irq: { confederation: "AFC", rankNov: 58, rankJune: 57, qualification: "Inter-confederation playoff Path 2 winner", qualified: "March 31, 2026", appearance: "2nd", last: "1986", best: "Group stage" },
+  nor: { confederation: "UEFA", rankNov: 29, rankJune: 31, qualification: "UEFA Group I winner", qualified: "November 16, 2025", appearance: "4th", last: "1998", best: "Round of 16 (1998)" },
+  arg: { confederation: "CONMEBOL", rankNov: 2, rankJune: 1, qualification: "CONMEBOL round robin winner", qualified: "March 25, 2025", appearance: "19th", last: "2022", best: "Winner (1978, 1986, 2022)" },
+  alg: { confederation: "CAF", rankNov: 35, rankJune: 28, qualification: "CAF Group G winner", qualified: "October 9, 2025", appearance: "5th", last: "2014", best: "Round of 16 (2014)" },
+  aut: { confederation: "UEFA", rankNov: 24, rankJune: 24, qualification: "UEFA Group H winner", qualified: "November 18, 2025", appearance: "8th", last: "1998", best: "Third place (1954)" },
+  jor: { confederation: "AFC", rankNov: 66, rankJune: 63, qualification: "AFC third round Group B runner-up", qualified: "June 5, 2025", appearance: "1st", last: "Debut", best: "Debut" },
+  por: { confederation: "UEFA", rankNov: 6, rankJune: 5, qualification: "UEFA Group F winner", qualified: "November 16, 2025", appearance: "9th", last: "2022", best: "Third place (1966)" },
+  cod: { confederation: "CAF", rankNov: 56, rankJune: 46, qualification: "Inter-confederation playoff Path 1 winner", qualified: "March 31, 2026", appearance: "2nd", last: "1974", best: "Group stage" },
+  uzb: { confederation: "AFC", rankNov: 50, rankJune: 50, qualification: "AFC third round Group A runner-up", qualified: "June 5, 2025", appearance: "1st", last: "Debut", best: "Debut" },
+  col: { confederation: "CONMEBOL", rankNov: 13, rankJune: 13, qualification: "CONMEBOL round robin third place", qualified: "September 4, 2025", appearance: "7th", last: "2018", best: "Quarterfinals (2014)" },
+  eng: { confederation: "UEFA", rankNov: 4, rankJune: 4, qualification: "UEFA Group K winner", qualified: "October 14, 2025", appearance: "17th", last: "2022", best: "Winner (1966)" },
+  cro: { confederation: "UEFA", rankNov: 10, rankJune: 11, qualification: "UEFA Group L winner", qualified: "November 14, 2025", appearance: "7th", last: "2022", best: "Runner-up (2018)" },
+  gha: { confederation: "CAF", rankNov: 72, rankJune: 73, qualification: "CAF Group I winner", qualified: "October 12, 2025", appearance: "5th", last: "2022", best: "Quarterfinals (2010)" },
+  pan: { confederation: "CONCACAF", rankNov: 30, rankJune: 34, qualification: "CONCACAF Group A winner", qualified: "November 18, 2025", appearance: "2nd", last: "2018", best: "Group stage" }
+};
+
 let state = null;
 let isAdmin = ADMIN_PARAM === "1";
 let localDirty = false;
 let activeView = isAdmin ? "admin" : "scoreboard";
 let teamFilters = { pot: "all", owner: "all", group: "all" };
+let matchFilters = { stage: "all", team: "all", status: "all" };
 let adminFilters = { pot: "all", owner: "all", group: "all" };
 let setupPollTimer = null;
 let livePollTimer = null;
 let live = createLiveState();
+let selectedTeamId = QUERY.get("team") || "";
+let githubPushTimer = null;
+let githubSync = loadGithubSyncSettings();
 
 const els = {
   syncState: document.getElementById("sync-state"),
@@ -54,7 +109,9 @@ const els = {
   leaderboard: document.getElementById("leaderboard"),
   scoreSummary: document.getElementById("score-summary"),
   teamFilters: document.getElementById("team-filters"),
+  teamDetail: document.getElementById("team-detail"),
   teamTableBody: document.getElementById("team-table-body"),
+  matchFilters: document.getElementById("match-filters"),
   matchTableBody: document.getElementById("match-table-body"),
   rulesGrid: document.getElementById("rules-grid"),
   adminToggle: document.getElementById("admin-toggle"),
@@ -68,7 +125,15 @@ const els = {
   downloadJsonButton: document.getElementById("download-json-button"),
   copyJsonButton: document.getElementById("copy-json-button"),
   importJsonInput: document.getElementById("import-json-input"),
-  loadPublishedButton: document.getElementById("load-published-button")
+  loadPublishedButton: document.getElementById("load-published-button"),
+  githubOwner: document.getElementById("github-owner"),
+  githubRepo: document.getElementById("github-repo"),
+  githubBranch: document.getElementById("github-branch"),
+  githubToken: document.getElementById("github-token"),
+  githubRemember: document.getElementById("github-remember"),
+  githubAutoPush: document.getElementById("github-auto-push"),
+  githubPushButton: document.getElementById("github-push-button"),
+  githubSyncStatus: document.getElementById("github-sync-status")
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -103,6 +168,24 @@ function bindEvents() {
   els.downloadJsonButton.addEventListener("click", downloadState);
   els.copyJsonButton.addEventListener("click", copyStateJson);
   els.importJsonInput.addEventListener("change", importStateJson);
+  els.githubPushButton.addEventListener("click", () => pushSetupToGithub({ manual: true }));
+
+  [els.githubOwner, els.githubRepo, els.githubBranch, els.githubToken].forEach((input) => {
+    input.addEventListener("change", updateGithubSettingsFromForm);
+  });
+  [els.githubRemember, els.githubAutoPush].forEach((input) => {
+    input.addEventListener("change", updateGithubSettingsFromForm);
+  });
+
+  document.body.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-team-id]");
+    if (!trigger) return;
+    const teamId = trigger.dataset.teamId;
+    if (!teamId) return;
+    selectedTeamId = teamId;
+    setView("teams");
+    render();
+  });
 }
 
 function setView(view) {
@@ -183,7 +266,9 @@ function render() {
   renderLeaderboard();
   renderSummary();
   renderFilters(els.teamFilters, teamFilters, "team");
+  renderTeamDetail();
   renderTeamTable();
+  renderMatchFilters();
   renderMatchTable();
   renderRules();
   renderAdmin();
@@ -202,7 +287,7 @@ function renderLeaderboard() {
           const chips = entry.teams
             .filter((team) => team.pot === pot)
             .sort(sortTeamsByScore)
-            .map((team) => `<span class="team-chip" data-pot="${team.pot}">${escapeHtml(team.name)} ${teamScore(team)}</span>`)
+            .map((team) => `<button class="team-chip team-chip--button" type="button" data-pot="${team.pot}" data-team-id="${team.id}">${escapeHtml(team.name)} ${teamScore(team)}</button>`)
             .join("");
           return `
             <div class="pot-row">
@@ -317,6 +402,87 @@ function renderFilters(container, filters, scope) {
   });
 }
 
+function renderMatchFilters() {
+  const stages = [...new Set(live.matches.map((match) => match.stage))].filter(Boolean);
+  const teamOptions = state.teams
+    .map((team) => `<option value="${team.id}" ${matchFilters.team === team.id ? "selected" : ""}>${escapeHtml(team.name)}</option>`)
+    .join("");
+
+  els.matchFilters.innerHTML = `
+    <select aria-label="Filter matches by stage" data-match-filter="stage">
+      <option value="all">All stages</option>
+      ${stages.map((stage) => `<option value="${stage}" ${matchFilters.stage === stage ? "selected" : ""}>${escapeHtml(stage)}</option>`).join("")}
+    </select>
+    <select aria-label="Filter matches by team" data-match-filter="team">
+      <option value="all">All teams</option>
+      ${teamOptions}
+    </select>
+    <select aria-label="Filter matches by status" data-match-filter="status">
+      <option value="all">All statuses</option>
+      <option value="live" ${matchFilters.status === "live" ? "selected" : ""}>Live</option>
+      <option value="final" ${matchFilters.status === "final" ? "selected" : ""}>Final</option>
+      <option value="scheduled" ${matchFilters.status === "scheduled" ? "selected" : ""}>Scheduled</option>
+    </select>
+  `;
+
+  els.matchFilters.querySelectorAll("select").forEach((select) => {
+    select.addEventListener("change", () => {
+      matchFilters[select.dataset.matchFilter] = select.value;
+      render();
+    });
+  });
+}
+
+function renderTeamDetail() {
+  const team = state.teams.find((item) => item.id === selectedTeamId);
+  if (!team) {
+    els.teamDetail.classList.add("is-empty");
+    els.teamDetail.innerHTML = "Select any team to see rankings, qualification path, owner, scoring, and schedule.";
+    return;
+  }
+
+  const info = TEAM_INFO[team.id] || {};
+  const stats = computedTeam(team);
+  const schedule = teamSchedule(team.id);
+  els.teamDetail.classList.remove("is-empty");
+  els.teamDetail.innerHTML = `
+    <div class="team-detail__header">
+      <div>
+        <p class="eyebrow">Group ${escapeHtml(team.group)} / Pot ${team.pot}</p>
+        <h3>${escapeHtml(team.name)}</h3>
+        <p class="team-detail__sub">${escapeHtml(ownerName(team.ownerId))} owns this team. ${escapeHtml(teamHook(team, info))}</p>
+      </div>
+      <div class="score-badge">
+        <strong>${teamScore(team)}</strong>
+        <span>points</span>
+      </div>
+    </div>
+    <div class="detail-grid">
+      ${detailStat("June ranking", rankText(info.rankJune))}
+      ${detailStat("Draw ranking", rankText(info.rankNov))}
+      ${detailStat("Qualified", info.qualification || "Unknown")}
+      ${detailStat("Best finish", info.best || "Unknown")}
+      ${detailStat("Appearance", info.appearance || "Unknown")}
+      ${detailStat("Last World Cup", info.last || "Unknown")}
+      ${detailStat("Confederation", info.confederation || "Unknown")}
+      ${detailStat("Record", `${stats.groupWins}-${stats.groupDraws}-${stats.groupLosses}`)}
+    </div>
+    <div class="schedule-list">
+      <h4>${escapeHtml(team.name)} schedule</h4>
+      ${schedule.length ? schedule.map((match) => renderTeamMatchCard(team.id, match)).join("") : "<p>No known scheduled matches loaded yet.</p>"}
+    </div>
+  `;
+}
+
+function detailStat(label, value) {
+  return `
+    <div class="detail-stat">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(String(value))}</strong>
+    </div>
+  `;
+}
+
 function renderTeamTable() {
   els.teamTableBody.innerHTML = filteredTeams(teamFilters)
     .sort((a, b) => a.pot - b.pot || a.group.localeCompare(b.group) || a.name.localeCompare(b.name))
@@ -326,7 +492,7 @@ function renderTeamTable() {
         <tr>
           <td>
             <div class="team-name">
-              <strong>${escapeHtml(team.name)}</strong>
+              <button class="team-link" type="button" data-team-id="${team.id}">${escapeHtml(team.name)}</button>
               <span>${escapeHtml(team.id.toUpperCase())}</span>
             </div>
           </td>
@@ -344,13 +510,7 @@ function renderTeamTable() {
 }
 
 function renderMatchTable() {
-  const now = new Date();
-  const rows = live.matches
-    .filter((match) => {
-      const matchDate = new Date(match.date);
-      return match.inProgress || match.completed || matchDate >= new Date(now.getTime() - 36 * 60 * 60 * 1000);
-    })
-    .slice(0, 120)
+  const rows = filteredMatches()
     .map(
       (match) => `
         <tr>
@@ -358,7 +518,7 @@ function renderMatchTable() {
           <td>${escapeHtml(match.stage)}</td>
           <td>
             <div class="team-name">
-              <strong>${escapeHtml(match.homeName)} vs ${escapeHtml(match.awayName)}</strong>
+              <strong>${renderMatchTeam(match.homeId, match.homeName)} vs ${renderMatchTeam(match.awayId, match.awayName)}</strong>
               <span>${escapeHtml(match.venue || "Venue TBD")}</span>
             </div>
           </td>
@@ -371,6 +531,59 @@ function renderMatchTable() {
 
   els.matchTableBody.innerHTML = rows || `<tr><td colspan="5">No ESPN matches loaded yet.</td></tr>`;
 }
+
+function renderMatchTeam(teamId, name) {
+  return teamId
+    ? `<button class="team-link" type="button" data-team-id="${teamId}">${escapeHtml(name)}</button>`
+    : escapeHtml(name);
+}
+
+function renderTeamMatchCard(teamId, match) {
+  const opponentName = match.homeId === teamId ? match.awayName : match.homeName;
+  const opponentId = match.homeId === teamId ? match.awayId : match.homeId;
+  const side = match.homeId === teamId ? "vs" : "at";
+  return `
+    <article class="match-card">
+      <span class="match-card__date">${escapeHtml(formatMatchDate(match.date))}</span>
+      <span class="match-card__main">
+        <strong>${escapeHtml(side)} ${renderMatchTeam(opponentId, opponentName)}</strong>
+        <span>${escapeHtml(match.stage)} / ${escapeHtml(match.venue || "Venue TBD")}</span>
+      </span>
+      <span class="match-card__status">${escapeHtml(match.scoreLine)} / ${escapeHtml(match.statusDetail)}</span>
+    </article>
+  `;
+}
+
+function filteredMatches() {
+  return live.matches.filter((match) => {
+    if (matchFilters.stage !== "all" && match.stage !== matchFilters.stage) return false;
+    if (matchFilters.team !== "all" && match.homeId !== matchFilters.team && match.awayId !== matchFilters.team) return false;
+    if (matchFilters.status === "live" && !match.inProgress) return false;
+    if (matchFilters.status === "final" && !match.completed) return false;
+    if (matchFilters.status === "scheduled" && (match.completed || match.inProgress)) return false;
+    return true;
+  });
+}
+
+function teamSchedule(teamId) {
+  return live.matches.filter((match) => match.homeId === teamId || match.awayId === teamId);
+}
+
+function rankText(value) {
+  return value ? `No. ${value}` : "Unknown";
+}
+
+function teamHook(team, info) {
+  if (info.qualification === "Co-host") return "Home pressure, home crowds, and a free ticket into the tournament.";
+  if (String(info.best || "").includes("Winner")) return "Former World Cup champion. Expectations are baked in.";
+  if (info.appearance === "1st" || info.best === "Debut") return "Tournament debut team, which makes every point feel loud.";
+  if (String(info.best || "").includes("Runner-up")) return "They have been close enough to know how much the final step hurts.";
+  if (String(info.best || "").includes("Third place") || String(info.best || "").includes("Fourth place")) return "A real history of deep-tournament troublemaking.";
+  if (team.pot === 4) return "Classic sleeper profile. Anything beyond the group stage can swing the pool.";
+  if (team.pot === 1) return "Top-pot team with pressure to carry a roster.";
+  return "Solid tournament profile with enough upside to matter in the standings.";
+}
+
 
 function renderRules() {
   const scoring = state.scoring;
@@ -418,6 +631,7 @@ function renderAdmin() {
   els.adminToggle.hidden = false;
   document.getElementById("admin-view").classList.toggle("is-hidden", !isAdmin && activeView !== "admin");
   renderPlayerEditor();
+  renderGithubSync();
   renderFilters(els.adminFilters, adminFilters, "admin");
   renderAdminTeamTable();
 }
@@ -444,6 +658,30 @@ function renderPlayerEditor() {
   });
 }
 
+function renderGithubSync() {
+  els.githubOwner.value = githubSync.owner;
+  els.githubRepo.value = githubSync.repo;
+  els.githubBranch.value = githubSync.branch;
+  els.githubToken.value = githubSync.token;
+  els.githubRemember.checked = githubSync.remember;
+  els.githubAutoPush.checked = githubSync.autoPush;
+  els.githubSyncStatus.textContent = githubSync.status || (githubSync.token ? "Ready" : "Not connected");
+}
+
+function updateGithubSettingsFromForm() {
+  githubSync = {
+    owner: els.githubOwner.value.trim() || "Jcurry44",
+    repo: els.githubRepo.value.trim() || "world-cup-challenge",
+    branch: els.githubBranch.value.trim() || "main",
+    token: els.githubToken.value.trim(),
+    remember: els.githubRemember.checked,
+    autoPush: els.githubAutoPush.checked,
+    status: githubSync.status
+  };
+  saveGithubSyncSettings();
+  renderGithubSync();
+}
+
 function renderAdminTeamTable() {
   const ownerOptions = [`<option value="">Unassigned</option>`]
     .concat(state.players.map((player) => `<option value="${player.id}">${escapeHtml(player.name)}</option>`))
@@ -457,7 +695,7 @@ function renderAdminTeamTable() {
         <tr>
           <td>
             <div class="team-name">
-              <strong>${escapeHtml(team.name)}</strong>
+              <button class="team-link" type="button" data-team-id="${team.id}">${escapeHtml(team.name)}</button>
               <span>Pot ${team.pot} / Group ${escapeHtml(team.group)}</span>
             </div>
           </td>
@@ -558,6 +796,67 @@ async function importStateJson(event) {
   }
 }
 
+async function pushSetupToGithub({ manual = false } = {}) {
+  updateGithubSettingsFromForm();
+  if (!githubSync.token || !githubSync.owner || !githubSync.repo || !githubSync.branch) {
+    githubSync.status = "Add repo details and token first";
+    renderGithubSync();
+    return;
+  }
+
+  els.githubPushButton.disabled = true;
+  githubSync.status = "Pushing setup...";
+  renderGithubSync();
+
+  const path = "data/challenge-state.json";
+  const apiBase = `https://api.github.com/repos/${encodeURIComponent(githubSync.owner)}/${encodeURIComponent(githubSync.repo)}/contents/${path}`;
+  const headers = {
+    Accept: "application/vnd.github+json",
+    Authorization: `Bearer ${githubSync.token}`,
+    "X-GitHub-Api-Version": "2022-11-28"
+  };
+
+  try {
+    stampUpdate();
+    const currentResponse = await fetch(`${apiBase}?ref=${encodeURIComponent(githubSync.branch)}`, { headers });
+    if (!currentResponse.ok) {
+      throw new Error(`Could not read current GitHub file (${currentResponse.status})`);
+    }
+    const currentFile = await currentResponse.json();
+    const body = {
+      message: `Update World Cup Challenge setup`,
+      content: base64Encode(stableStringify(state)),
+      sha: currentFile.sha,
+      branch: githubSync.branch
+    };
+
+    const updateResponse = await fetch(apiBase, {
+      method: "PUT",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!updateResponse.ok) {
+      const errorText = await updateResponse.text();
+      throw new Error(`GitHub push failed (${updateResponse.status}): ${errorText.slice(0, 160)}`);
+    }
+
+    localDirty = false;
+    githubSync.status = `Pushed ${formatDateTime(new Date().toISOString())}`;
+    saveGithubSyncSettings();
+    setSync("Published", "Setup pushed to GitHub.");
+    render();
+  } catch (error) {
+    githubSync.status = manual ? error.message : "Auto-push failed";
+    renderGithubSync();
+  } finally {
+    els.githubPushButton.disabled = false;
+  }
+}
+
 function buildLiveState(scoreboard) {
   const next = createLiveState();
   const knownTeamIds = new Set(state.teams.map((team) => team.id));
@@ -625,6 +924,8 @@ function toMatch(event, competition, parsed, stage, completed, inProgress, statu
     completed,
     inProgress,
     statusDetail: statusType.shortDetail || statusType.detail || statusType.description || "Scheduled",
+    homeId: home.id,
+    awayId: away.id,
     homeName: home.name,
     awayName: away.name,
     venue: competition.venue?.fullName || competition.venue?.displayName || event.venue?.displayName || "",
@@ -841,6 +1142,13 @@ function markDirty() {
   localDirty = true;
   stampUpdate();
   setSync("Setup draft", "Publish the setup file once assignments are ready.");
+  scheduleGithubAutoPush();
+}
+
+function scheduleGithubAutoPush() {
+  window.clearTimeout(githubPushTimer);
+  if (!githubSync.autoPush || !githubSync.token) return;
+  githubPushTimer = window.setTimeout(() => pushSetupToGithub(), 2500);
 }
 
 function stampUpdate() {
@@ -869,6 +1177,53 @@ function shuffle(items) {
 
 function stableStringify(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+function base64Encode(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.slice(index, index + chunkSize));
+  }
+  return btoa(binary);
+}
+
+function loadGithubSyncSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("worldCupGithubSync") || "{}");
+    return {
+      owner: saved.owner || "Jcurry44",
+      repo: saved.repo || "world-cup-challenge",
+      branch: saved.branch || "main",
+      token: saved.remember ? saved.token || "" : "",
+      remember: Boolean(saved.remember),
+      autoPush: Boolean(saved.autoPush),
+      status: ""
+    };
+  } catch (error) {
+    return {
+      owner: "Jcurry44",
+      repo: "world-cup-challenge",
+      branch: "main",
+      token: "",
+      remember: false,
+      autoPush: false,
+      status: ""
+    };
+  }
+}
+
+function saveGithubSyncSettings() {
+  const safeSettings = {
+    owner: githubSync.owner,
+    repo: githubSync.repo,
+    branch: githubSync.branch,
+    remember: githubSync.remember,
+    autoPush: githubSync.autoPush,
+    token: githubSync.remember ? githubSync.token : ""
+  };
+  localStorage.setItem("worldCupGithubSync", JSON.stringify(safeSettings));
 }
 
 function formatDateTime(value) {
