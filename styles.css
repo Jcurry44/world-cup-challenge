@@ -422,36 +422,69 @@ main {
   box-shadow: var(--shadow);
 }
 
-.team-detail {
+.scorecard-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  justify-items: end;
+  background: rgba(13, 28, 24, 0.42);
+}
+
+.scorecard-panel {
+  position: relative;
+  width: min(560px, calc(100vw - 24px));
+  height: 100%;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: -22px 0 56px rgba(13, 28, 24, 0.22);
+  padding: 24px;
+}
+
+.scorecard-close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  float: right;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.scorecard-layout {
   display: grid;
   gap: 16px;
-  margin-bottom: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  padding: 18px;
 }
 
-.team-detail.is-empty {
-  color: var(--muted);
-}
-
-.team-detail__header {
+.scorecard-title-row {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
+  gap: 16px;
+  padding-right: 44px;
 }
 
-.team-detail__header h3 {
+.scorecard-title-row h3 {
   margin: 0;
-  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
 }
 
-.team-detail__sub {
-  margin: 6px 0 0;
+.scorecard-sub {
+  margin: 8px 0 0;
   color: var(--muted);
+}
+
+.scorecard-section {
+  display: grid;
+  gap: 10px;
+}
+
+.scorecard-section h4 {
+  margin: 0;
 }
 
 .detail-grid {
@@ -743,8 +776,25 @@ main {
     display: grid;
   }
 
-  .team-detail__header,
   .match-card {
     grid-template-columns: 1fr;
+  }
+
+  .scorecard-backdrop {
+    align-items: end;
+    justify-items: stretch;
+  }
+
+  .scorecard-panel {
+    width: 100%;
+    height: min(88vh, 760px);
+    border-top: 1px solid var(--line);
+    border-left: 0;
+    border-radius: 16px 16px 0 0;
+    padding: 18px;
+  }
+
+  .scorecard-title-row {
+    flex-direction: column;
   }
 }

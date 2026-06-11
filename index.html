@@ -60,7 +60,6 @@
           </div>
           <div class="filters" id="team-filters"></div>
         </div>
-        <aside class="team-detail" id="team-detail" aria-live="polite"></aside>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -210,6 +209,13 @@
         </section>
       </section>
     </main>
+
+    <div class="scorecard-backdrop is-hidden" id="team-scorecard" role="dialog" aria-modal="true" aria-labelledby="scorecard-title">
+      <section class="scorecard-panel">
+        <button class="scorecard-close" type="button" id="scorecard-close" aria-label="Close team scorecard">x</button>
+        <div id="scorecard-body"></div>
+      </section>
+    </div>
 
     <footer class="footer-band">
       <span id="footer-updated">Ready</span>

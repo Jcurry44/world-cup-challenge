@@ -98,6 +98,7 @@ let setupPollTimer = null;
 let livePollTimer = null;
 let live = createLiveState();
 let selectedTeamId = QUERY.get("team") || "";
+let scorecardOpen = false;
 let githubPushTimer = null;
 let githubSync = loadGithubSyncSettings();
 
@@ -109,7 +110,6 @@ const els = {
   leaderboard: document.getElementById("leaderboard"),
   scoreSummary: document.getElementById("score-summary"),
   teamFilters: document.getElementById("team-filters"),
-  teamDetail: document.getElementById("team-detail"),
   teamTableBody: document.getElementById("team-table-body"),
   matchFilters: document.getElementById("match-filters"),
   matchTableBody: document.getElementById("match-table-body"),
@@ -133,7 +133,10 @@ const els = {
   githubRemember: document.getElementById("github-remember"),
   githubAutoPush: document.getElementById("github-auto-push"),
   githubPushButton: document.getElementById("github-push-button"),
-  githubSyncStatus: document.getElementById("github-sync-status")
+  githubSyncStatus: document.getElementById("github-sync-status"),
+  teamScorecard: document.getElementById("team-scorecard"),
+  scorecardBody: document.getElementById("scorecard-body"),
+  scorecardClose: document.getElementById("scorecard-close")
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -169,6 +172,13 @@ function bindEvents() {
   els.copyJsonButton.addEventListener("click", copyStateJson);
   els.importJsonInput.addEventListener("change", importStateJson);
   els.githubPushButton.addEventListener("click", () => pushSetupToGithub({ manual: true }));
+  els.scorecardClose.addEventListener("click", closeTeamScorecard);
+  els.teamScorecard.addEventListener("click", (event) => {
+    if (event.target === els.teamScorecard) closeTeamScorecard();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && scorecardOpen) closeTeamScorecard();
+  });
 
   [els.githubOwner, els.githubRepo, els.githubBranch, els.githubToken].forEach((input) => {
     input.addEventListener("change", updateGithubSettingsFromForm);
@@ -182,9 +192,7 @@ function bindEvents() {
     if (!trigger) return;
     const teamId = trigger.dataset.teamId;
     if (!teamId) return;
-    selectedTeamId = teamId;
-    setView("teams");
-    render();
+    openTeamScorecard(teamId);
   });
 }
 
@@ -266,12 +274,12 @@ function render() {
   renderLeaderboard();
   renderSummary();
   renderFilters(els.teamFilters, teamFilters, "team");
-  renderTeamDetail();
   renderTeamTable();
   renderMatchFilters();
   renderMatchTable();
   renderRules();
   renderAdmin();
+  renderTeamScorecard();
 
   const setupStatus = localDirty ? "Local setup changes not published" : `Setup loaded from ${SETUP_URL.pathname}`;
   const liveStatus = live.loadedAt ? `ESPN feed updated ${formatDateTime(live.loadedAt)}` : "Waiting for ESPN feed";
@@ -433,43 +441,68 @@ function renderMatchFilters() {
   });
 }
 
-function renderTeamDetail() {
+function openTeamScorecard(teamId) {
+  selectedTeamId = teamId;
+  scorecardOpen = true;
+  renderTeamScorecard();
+}
+
+function closeTeamScorecard() {
+  scorecardOpen = false;
+  els.teamScorecard.classList.add("is-hidden");
+  els.scorecardBody.innerHTML = "";
+}
+
+function renderTeamScorecard() {
+  if (!scorecardOpen) {
+    els.teamScorecard.classList.add("is-hidden");
+    return;
+  }
+
   const team = state.teams.find((item) => item.id === selectedTeamId);
   if (!team) {
-    els.teamDetail.classList.add("is-empty");
-    els.teamDetail.innerHTML = "Select any team to see rankings, qualification path, owner, scoring, and schedule.";
+    closeTeamScorecard();
     return;
   }
 
   const info = TEAM_INFO[team.id] || {};
   const stats = computedTeam(team);
   const schedule = teamSchedule(team.id);
-  els.teamDetail.classList.remove("is-empty");
-  els.teamDetail.innerHTML = `
-    <div class="team-detail__header">
-      <div>
-        <p class="eyebrow">Group ${escapeHtml(team.group)} / Pot ${team.pot}</p>
-        <h3>${escapeHtml(team.name)}</h3>
-        <p class="team-detail__sub">${escapeHtml(ownerName(team.ownerId))} owns this team. ${escapeHtml(teamHook(team, info))}</p>
+  els.teamScorecard.classList.remove("is-hidden");
+  els.scorecardBody.innerHTML = `
+    <div class="scorecard-layout">
+      <div class="scorecard-title-row">
+        <div>
+          <p class="eyebrow">Group ${escapeHtml(team.group)} / Pot ${team.pot}</p>
+          <h3 id="scorecard-title">${escapeHtml(team.name)}</h3>
+          <p class="scorecard-sub">${escapeHtml(ownerName(team.ownerId))} owns this team.</p>
+        </div>
+        <div class="score-badge">
+          <strong>${teamScore(team)}</strong>
+          <span>points</span>
+        </div>
       </div>
-      <div class="score-badge">
-        <strong>${teamScore(team)}</strong>
-        <span>points</span>
+      <p class="team-note">${escapeHtml(teamHook(team, info))}</p>
+      <div class="detail-grid">
+        ${detailStat("Live points", teamScore(team))}
+        ${detailStat("Record", `${stats.groupWins}-${stats.groupDraws}-${stats.groupLosses}`)}
+        ${detailStat("Goals", stats.goalsFor)}
+        ${detailStat("Stage", stats.stage)}
+        ${detailStat("June ranking", rankText(info.rankJune))}
+        ${detailStat("Draw ranking", rankText(info.rankNov))}
+        ${detailStat("Qualified", info.qualification || "Unknown")}
+        ${detailStat("Best finish", info.best || "Unknown")}
+        ${detailStat("Appearance", info.appearance || "Unknown")}
+        ${detailStat("Last World Cup", info.last || "Unknown")}
+        ${detailStat("Confederation", info.confederation || "Unknown")}
+        ${detailStat("Qualified date", info.qualified || "Unknown")}
       </div>
-    </div>
-    <div class="detail-grid">
-      ${detailStat("June ranking", rankText(info.rankJune))}
-      ${detailStat("Draw ranking", rankText(info.rankNov))}
-      ${detailStat("Qualified", info.qualification || "Unknown")}
-      ${detailStat("Best finish", info.best || "Unknown")}
-      ${detailStat("Appearance", info.appearance || "Unknown")}
-      ${detailStat("Last World Cup", info.last || "Unknown")}
-      ${detailStat("Confederation", info.confederation || "Unknown")}
-      ${detailStat("Record", `${stats.groupWins}-${stats.groupDraws}-${stats.groupLosses}`)}
-    </div>
-    <div class="schedule-list">
-      <h4>${escapeHtml(team.name)} schedule</h4>
-      ${schedule.length ? schedule.map((match) => renderTeamMatchCard(team.id, match)).join("") : "<p>No known scheduled matches loaded yet.</p>"}
+      <div class="scorecard-section">
+        <h4>${escapeHtml(team.name)} schedule</h4>
+        <div class="schedule-list">
+          ${schedule.length ? schedule.map((match) => renderTeamMatchCard(team.id, match)).join("") : "<p>No known scheduled matches loaded yet.</p>"}
+        </div>
+      </div>
     </div>
   `;
 }
