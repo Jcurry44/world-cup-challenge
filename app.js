@@ -300,6 +300,7 @@ function renderLeaderboard() {
                 <button class="team-chip team-chip--button" type="button" data-pot="${team.pot}" data-team-id="${team.id}">
                   <span>${escapeHtml(team.name)}</span>
                   <strong>${teamScore(team)}</strong>
+                  <small>${escapeHtml(scoreShortLabel(team))}</small>
                 </button>
               `
             )
@@ -506,6 +507,10 @@ function renderTeamScorecard() {
         ${detailStat("Qualified date", info.qualified || "Unknown")}
       </div>
       <div class="scorecard-section">
+        <h4>Score breakdown</h4>
+        ${renderScoreBreakdown(team)}
+      </div>
+      <div class="scorecard-section">
         <h4>${escapeHtml(team.name)} schedule</h4>
         <div class="schedule-list">
           ${schedule.length ? schedule.map((match) => renderTeamMatchCard(team.id, match)).join("") : "<p>No known scheduled matches loaded yet.</p>"}
@@ -520,6 +525,30 @@ function detailStat(label, value) {
     <div class="detail-stat">
       <span>${escapeHtml(label)}</span>
       <strong>${escapeHtml(String(value))}</strong>
+    </div>
+  `;
+}
+
+function renderScoreBreakdown(team) {
+  const rows = scoreBreakdown(team);
+  return `
+    <div class="score-breakdown">
+      ${rows
+        .map(
+          (row) => `
+            <div class="score-breakdown__row">
+              <span>${escapeHtml(row.label)}</span>
+              <small>${escapeHtml(row.formula)}</small>
+              <strong>${row.points}</strong>
+            </div>
+          `
+        )
+        .join("")}
+      <div class="score-breakdown__row score-breakdown__row--total">
+        <span>Total</span>
+        <small>${escapeHtml(team.name)}</small>
+        <strong>${teamScore(team)}</strong>
+      </div>
     </div>
   `;
 }
@@ -1066,16 +1095,55 @@ function getStandings() {
 }
 
 function teamScore(team) {
+  return scoreBreakdown(team).reduce((sum, row) => sum + row.points, 0);
+}
+
+function scoreBreakdown(team) {
   const scoring = state.scoring;
   const stats = computedTeam(team);
-  return (
-    Number(stats.groupWins || 0) * scoring.groupWin +
-    Number(stats.groupDraws || 0) * scoring.groupDraw +
-    Number(stats.goalsFor || 0) * scoring.goal +
-    Number(stats.cleanSheets || 0) * scoring.cleanSheet +
-    Number(stats.awards || 0) * scoring.award +
-    Number(scoring.stage[stats.stage] || 0)
-  );
+  const stagePoints = Number(scoring.stage[stats.stage] || 0);
+  return [
+    {
+      label: "Group wins",
+      formula: `${Number(stats.groupWins || 0)} x ${scoring.groupWin}`,
+      points: Number(stats.groupWins || 0) * scoring.groupWin
+    },
+    {
+      label: "Group draws",
+      formula: `${Number(stats.groupDraws || 0)} x ${scoring.groupDraw}`,
+      points: Number(stats.groupDraws || 0) * scoring.groupDraw
+    },
+    {
+      label: "Goals",
+      formula: `${Number(stats.goalsFor || 0)} x ${scoring.goal}`,
+      points: Number(stats.goalsFor || 0) * scoring.goal
+    },
+    {
+      label: "Clean sheets",
+      formula: `${Number(stats.cleanSheets || 0)} x ${scoring.cleanSheet}`,
+      points: Number(stats.cleanSheets || 0) * scoring.cleanSheet
+    },
+    {
+      label: "Stage bonus",
+      formula: `${stats.stage}`,
+      points: stagePoints
+    },
+    {
+      label: "Awards",
+      formula: `${Number(stats.awards || 0)} x ${scoring.award}`,
+      points: Number(stats.awards || 0) * scoring.award
+    }
+  ];
+}
+
+function scoreShortLabel(team) {
+  const stats = computedTeam(team);
+  const parts = [`${stats.groupWins}-${stats.groupDraws}-${stats.groupLosses}`];
+  if (stats.goalsFor) parts.push(`${stats.goalsFor}G`);
+  if (stats.cleanSheets) parts.push(`${stats.cleanSheets}CS`);
+  if (Number(state.scoring.stage[stats.stage] || 0)) parts.push(stats.stage.replace("Round of ", "R"));
+  if (stats.awards) parts.push(`${stats.awards}A`);
+  return parts.join(" / ");
 }
 
 function sortTeamsByScore(a, b) {
